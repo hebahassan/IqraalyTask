@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="data"
+            type="com.example.heba.iqraalytask.model.Data"/>
+
+        <variable
+            name="vm"
+            type="com.example.heba.iqraalytask.ui.book.BookViewModel"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layoutDirection="rtl"
+        android:background="@color/background">
+
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/toolbar" />
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{vm.busy}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/IV_book_cover"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_h"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_v"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_layout"
+            imageUrl="@{data.book.cover}"
+            android:src="@mipmap/ic_launcher"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline_v"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.45" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline_h"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.52" />
+
+        <ImageButton
+            android:id="@+id/BT_play"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#b3ffffff"
+            android:src="@drawable/play"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_h"
+            app:layout_constraintEnd_toEndOf="@+id/IV_book_cover"
+            app:layout_constraintStart_toStartOf="@+id/IV_book_cover"
+            app:layout_constraintTop_toTopOf="@+id/IV_book_cover" />
+
+        <ImageView
+            android:id="@+id/IV_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintStart_toEndOf="@+id/BT_play"
+            app:layout_constraintTop_toTopOf="@+id/BT_play"
+            app:srcCompat="@drawable/author" />
+
+        <ImageView
+            android:id="@+id/IV_narrator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/IV_book_cover"
+            app:layout_constraintStart_toStartOf="@+id/guideline_v"
+            app:layout_constraintTop_toTopOf="@id/IV_book_cover"
+            app:srcCompat="@drawable/narrator" />
+
+        <ImageView
+            android:id="@+id/IV_publisher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="50dp"
+            app:layout_constraintBottom_toBottomOf="@+id/BT_play"
+            app:layout_constraintStart_toEndOf="@+id/BT_play"
+            app:srcCompat="@drawable/publisher" />
+
+        <TextView
+            android:id="@+id/TV_author"
+            style="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:maxLines="1"
+            android:text="@{data.book.author}"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/IV_author"
+            app:layout_constraintStart_toEndOf="@+id/IV_author"
+            app:layout_constraintTop_toTopOf="@+id/IV_author" />
+
+        <TextView
+            android:id="@+id/TV_narrator"
+            style="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:maxLines="1"
+            android:text="@{data.book.narratorName}"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/IV_narrator"
+            app:layout_constraintStart_toEndOf="@+id/IV_narrator"
+            app:layout_constraintTop_toTopOf="@+id/IV_narrator" />
+
+        <TextView
+            android:id="@+id/TV_publisher"
+            style="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:maxLines="1"
+            android:text="@{data.book.publisherName}"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/IV_publisher"
+            app:layout_constraintStart_toEndOf="@+id/IV_publisher"
+            app:layout_constraintTop_toTopOf="@+id/IV_publisher" />
+
+        <TextView
+            android:id="@+id/TV_disc"
+            style="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline_h"
+            android:text="@{data.book.about}"/>
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>
