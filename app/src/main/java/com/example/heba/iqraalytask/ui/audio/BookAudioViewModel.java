@@ -46,6 +46,8 @@ public class BookAudioViewModel extends AndroidViewModel {
     }
 
     private void initPlayer(){
+        getBusy().setValue(0);
+
         bandwidthMeter = new DefaultBandwidthMeter();
         defaultBandwidthMeter = new DefaultBandwidthMeter();
         trackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
@@ -58,7 +60,6 @@ public class BookAudioViewModel extends AndroidViewModel {
     }
 
     public LiveData<SimpleExoPlayer> getPlayer(List<Episode> episodeList) {
-        getBusy().setValue(0);
         initPlayer();
 
         if(episodeList != null && !episodeList.isEmpty()){
@@ -74,11 +75,6 @@ public class BookAudioViewModel extends AndroidViewModel {
 
             player.prepare(mediaSource);
             player.setPlayWhenReady(true);
-
-            getBusy().setValue(8);
-        }
-        else{
-            getBusy().setValue(8);
         }
 
         playerLiveData.setValue(player);

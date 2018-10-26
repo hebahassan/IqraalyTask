@@ -5,12 +5,17 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.QuickContactBadge;
 import android.widget.Toast;
 
 import com.example.heba.iqraalytask.R;
 import com.example.heba.iqraalytask.databinding.ActivityBookAudioBinding;
+import com.example.heba.iqraalytask.generated.callback.OnClickListener;
 import com.example.heba.iqraalytask.network.model.Book;
 import com.example.heba.iqraalytask.network.model.Episode;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -24,11 +29,16 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class BookAudioActivity extends AppCompatActivity {
     ActivityBookAudioBinding binding;
     BookAudioViewModel viewModel;
 
     List<Episode> episodeList = new ArrayList<>();
+
+    ImageButton ibPlay;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +50,7 @@ public class BookAudioActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this).get(BookAudioViewModel.class);
         binding.setAudioVM(viewModel);
         binding.setLifecycleOwner(this);
+        binding.executePendingBindings();
 
         episodeList = book.getEpisodes();
 
@@ -48,6 +59,7 @@ public class BookAudioActivity extends AppCompatActivity {
             public void onChanged(@Nullable SimpleExoPlayer player) {
                 binding.playerView.setPlayer(player);
                 setPlayerListener(player);
+                viewModel.getBusy().setValue(8);
             }
         });
     }
