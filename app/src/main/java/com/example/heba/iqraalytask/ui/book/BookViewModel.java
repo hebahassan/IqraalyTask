@@ -4,16 +4,21 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.example.heba.iqraalytask.app.GlideApp;
 import com.example.heba.iqraalytask.component.BookDataComponent;
 import com.example.heba.iqraalytask.component.DaggerBookDataComponent;
+import com.example.heba.iqraalytask.helper.GlideHelper;
+import com.example.heba.iqraalytask.network.model.Book;
 import com.example.heba.iqraalytask.network.model.BookResponse;
 import com.example.heba.iqraalytask.network.model.Data;
 import com.example.heba.iqraalytask.network.ApiService;
+import com.example.heba.iqraalytask.ui.audio.BookAudioActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,11 +70,10 @@ public class BookViewModel extends AndroidViewModel {
         return bookResLiveData;
     }
 
-    @BindingAdapter("imageUrl")
-    public static void loadImage(ImageView imageView, String url){
-        Context context = imageView.getContext();
-        GlideApp.with(context)
-                .load(url)
-                .into(imageView);
+    public void onPlayClick(View view, Book book){
+        Context context = view.getContext();
+        Intent intent = new Intent(context, BookAudioActivity.class);
+        intent.putExtra("Book", book);
+        context.startActivity(intent);
     }
 }

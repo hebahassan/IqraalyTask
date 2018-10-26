@@ -3,7 +3,9 @@ package com.example.heba.iqraalytask.network.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Episode {
+import java.io.Serializable;
+
+public class Episode implements Serializable {
     @SerializedName("id")
     @Expose
     private String id;

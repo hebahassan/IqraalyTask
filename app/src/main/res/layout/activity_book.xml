@@ -4,6 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.example.heba.iqraalytask.ui.book.BookActivity"/>
+
         <variable
             name="data"
             type="com.example.heba.iqraalytask.network.model.Data"/>
@@ -70,7 +72,8 @@
             app:layout_constraintBottom_toTopOf="@+id/guideline_h"
             app:layout_constraintEnd_toEndOf="@+id/IV_book_cover"
             app:layout_constraintStart_toStartOf="@+id/IV_book_cover"
-            app:layout_constraintTop_toTopOf="@+id/IV_book_cover" />
+            app:layout_constraintTop_toTopOf="@+id/IV_book_cover"
+            android:onClick="@{(view) -> vm.onPlayClick(view, data.book)}"/>
 
         <ImageView
             android:id="@+id/IV_author"
