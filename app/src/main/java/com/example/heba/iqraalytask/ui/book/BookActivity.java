@@ -6,14 +6,10 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import com.example.heba.iqraalytask.R;
 import com.example.heba.iqraalytask.databinding.ActivityBookBinding;
-import com.example.heba.iqraalytask.helper.Const;
-import com.example.heba.iqraalytask.helper.LocalHelper;
-import com.example.heba.iqraalytask.model.Data;
+import com.example.heba.iqraalytask.network.model.Data;
 
 public class BookActivity extends AppCompatActivity {
     ActivityBookBinding binding;
