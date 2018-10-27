@@ -120,7 +120,7 @@ public class BookAudioViewModel extends AndroidViewModel {
 
     public void onDownloadClick(Episode episode){
         Toast.makeText(getApplication(), "Downloading...", Toast.LENGTH_SHORT).show();
-        String memeType = "audio/mp3";
+        String memeType = "audio/*";
         String url = episode.getFile();
 
         DownloadManager downloadManager = (DownloadManager) getApplication().getSystemService(Context.DOWNLOAD_SERVICE);
@@ -130,5 +130,13 @@ public class BookAudioViewModel extends AndroidViewModel {
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.allowScanningByMediaScanner();
         downloadManager.enqueue(request);
+    }
+
+    public void onShareClick(Episode episode){
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        share.setType("text/plain");
+        share.putExtra(Intent.EXTRA_TEXT, "Listen to " + episode.getTitle() + " " + episode.getFile());
+        getApplication().startActivity(Intent.createChooser(share, "Share File"));
     }
 }

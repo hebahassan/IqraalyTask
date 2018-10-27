@@ -56,6 +56,16 @@
             app:layout_constraintTop_toTopOf="parent"
             android:onClick="@{() -> audioVM.onDownloadClick(episode)}"/>
 
+        <ImageButton
+            android:id="@+id/IB_share"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/share"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/IB_download"
+            android:onClick="@{() -> audioVM.onShareClick(episode)}"/>
+
         <com.google.android.exoplayer2.ui.PlayerControlView
             android:id="@+id/player_view"
             android:layout_width="0dp"
