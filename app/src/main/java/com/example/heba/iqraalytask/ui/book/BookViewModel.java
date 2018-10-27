@@ -5,15 +5,11 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.BindingAdapter;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.ImageView;
 
-import com.example.heba.iqraalytask.app.GlideApp;
 import com.example.heba.iqraalytask.component.BookDataComponent;
 import com.example.heba.iqraalytask.component.DaggerBookDataComponent;
-import com.example.heba.iqraalytask.helper.GlideHelper;
 import com.example.heba.iqraalytask.network.model.Book;
 import com.example.heba.iqraalytask.network.model.BookResponse;
 import com.example.heba.iqraalytask.network.model.Data;

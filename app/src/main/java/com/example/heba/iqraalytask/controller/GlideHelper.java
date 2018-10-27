@@ -1,10 +1,8 @@
-package com.example.heba.iqraalytask.helper;
+package com.example.heba.iqraalytask.controller;
 
 import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.widget.ImageView;
-
-import com.example.heba.iqraalytask.app.GlideApp;
 
 public class GlideHelper {
     @BindingAdapter("imageUrl")

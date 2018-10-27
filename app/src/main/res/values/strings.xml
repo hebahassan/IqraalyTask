@@ -2,4 +2,5 @@
     <string name="app_name">IqraalyTask</string>
 
     <string name="about_book">About Book</string>
+    <string name="runtime_permissions_txt">Please Enable These Permission to start</string>
 </resources>

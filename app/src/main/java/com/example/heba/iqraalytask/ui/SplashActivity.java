@@ -7,8 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.heba.iqraalytask.R;
-import com.example.heba.iqraalytask.helper.Const;
-import com.example.heba.iqraalytask.helper.LocalHelper;
+import com.example.heba.iqraalytask.controller.Const;
+import com.example.heba.iqraalytask.controller.LocalHelper;
 import com.example.heba.iqraalytask.ui.book.BookActivity;
 
 public class SplashActivity extends AppCompatActivity {

@@ -1,11 +1,14 @@
 package com.example.heba.iqraalytask.ui.audio;
 
 import android.app.Application;
+import android.app.DownloadManager;
 import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.example.heba.iqraalytask.network.model.Episode;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -28,16 +31,14 @@ import com.google.android.exoplayer2.util.Util;
 import java.util.List;
 
 public class BookAudioViewModel extends AndroidViewModel {
-    SimpleExoPlayer player;
-    DataSource.Factory dataSourceFactory;
-    MediaSource mediaSource;
-    DefaultExtractorsFactory extractorsFactory;
+    private SimpleExoPlayer player;
+    private DataSource.Factory dataSourceFactory;
+    private DefaultExtractorsFactory extractorsFactory;
 
-    private MutableLiveData<SimpleExoPlayer> playerLiveData = new MutableLiveData<>();
     private MutableLiveData<Integer> busy;
     private MutableLiveData<String> speedLD;
 
-    float speed = 1;
+    private float speed = 1;
     private int lastClick = 0;
 
     public BookAudioViewModel(@NonNull Application application) {
@@ -69,7 +70,8 @@ public class BookAudioViewModel extends AndroidViewModel {
                         .createMediaSource(Uri.parse(episodeList.get(i).getFile()));
             }
 
-            mediaSource = mediaSourcesArray.length == 1 ? mediaSourcesArray[0] : new ConcatenatingMediaSource(mediaSourcesArray);
+            MediaSource mediaSource = mediaSourcesArray.length == 1 ? mediaSourcesArray[0] :
+                    new ConcatenatingMediaSource(mediaSourcesArray);
 
             player.prepare(mediaSource);
             player.setPlayWhenReady(true);
@@ -112,5 +114,17 @@ public class BookAudioViewModel extends AndroidViewModel {
         PlaybackParameters param = new PlaybackParameters(speed);
         player.setPlaybackParameters(param);
         getSpeedLD().setValue(speed + "X");
+    }
+
+    public void onDownloadClick(Episode episode){
+        Toast.makeText(getApplication(), "Downloading...", Toast.LENGTH_SHORT).show();
+
+        DownloadManager downloadManager = (DownloadManager) getApplication().getSystemService(Context.DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(episode.getFile()));
+        request.setTitle(episode.getTitle());
+        request.setMimeType("audio/MP3");
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.allowScanningByMediaScanner();
+        downloadManager.enqueue(request);
     }
 }
