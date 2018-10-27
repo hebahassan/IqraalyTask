@@ -7,7 +7,9 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import com.example.heba.iqraalytask.network.model.Episode;
@@ -118,11 +120,13 @@ public class BookAudioViewModel extends AndroidViewModel {
 
     public void onDownloadClick(Episode episode){
         Toast.makeText(getApplication(), "Downloading...", Toast.LENGTH_SHORT).show();
+        String memeType = "audio/mp3";
+        String url = episode.getFile();
 
         DownloadManager downloadManager = (DownloadManager) getApplication().getSystemService(Context.DOWNLOAD_SERVICE);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(episode.getFile()));
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(episode.getTitle());
-        request.setMimeType("audio/MP3");
+        request.setMimeType(memeType);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.allowScanningByMediaScanner();
         downloadManager.enqueue(request);
