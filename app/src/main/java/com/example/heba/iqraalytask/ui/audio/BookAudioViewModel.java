@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 
 import com.example.heba.iqraalytask.network.model.Episode;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
@@ -30,28 +31,26 @@ public class BookAudioViewModel extends AndroidViewModel {
     SimpleExoPlayer player;
     DataSource.Factory dataSourceFactory;
     MediaSource mediaSource;
-    DefaultBandwidthMeter defaultBandwidthMeter;
     DefaultExtractorsFactory extractorsFactory;
-    TrackSelector trackSelector;
-    TrackSelection.Factory trackSelectionFactory;
-    BandwidthMeter bandwidthMeter;
-
-    MediaSource[] mediaSourcesArray;
 
     private MutableLiveData<SimpleExoPlayer> playerLiveData = new MutableLiveData<>();
     private MutableLiveData<Integer> busy;
+    private MutableLiveData<String> speedLD;
+
+    float speed = 1;
+    private int lastClick = 0;
 
     public BookAudioViewModel(@NonNull Application application) {
         super(application);
+        getBusy().setValue(0);
+        getSpeedLD().setValue(speed + "X");
     }
 
     private void initPlayer(){
-        getBusy().setValue(0);
-
-        bandwidthMeter = new DefaultBandwidthMeter();
-        defaultBandwidthMeter = new DefaultBandwidthMeter();
-        trackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        trackSelector = new DefaultTrackSelector(trackSelectionFactory);
+        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
+        TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
+        TrackSelector trackSelector = new DefaultTrackSelector(trackSelectionFactory);
         player = ExoPlayerFactory.newSimpleInstance(getApplication().getApplicationContext(), trackSelector);
         extractorsFactory = new DefaultExtractorsFactory();
         dataSourceFactory = new DefaultDataSourceFactory(getApplication().getApplicationContext(),
@@ -63,7 +62,7 @@ public class BookAudioViewModel extends AndroidViewModel {
         initPlayer();
 
         if(episodeList != null && !episodeList.isEmpty()){
-            mediaSourcesArray = new MediaSource[episodeList.size()];
+            MediaSource[] mediaSourcesArray = new MediaSource[episodeList.size()];
 
             for (int i = 0; i < episodeList.size(); i++) {
                 mediaSourcesArray[i] = new ExtractorMediaSource.Factory(dataSourceFactory)
@@ -91,5 +90,30 @@ public class BookAudioViewModel extends AndroidViewModel {
         if(busy == null)
             busy = new MutableLiveData<>();
         return busy;
+    }
+
+    public MutableLiveData<String> getSpeedLD() {
+        if(speedLD == null)
+            speedLD = new MutableLiveData<>();
+        return speedLD;
+    }
+
+    public void changeAudioSpeed(){
+        if(lastClick < 4){
+            speed += 0.25;
+            lastClick++;
+        }
+        else {
+            speed -= 0.25;
+            lastClick++;
+
+            if(lastClick == 8){
+                lastClick = 0;
+            }
+        }
+
+        PlaybackParameters param = new PlaybackParameters(speed);
+        player.setPlaybackParameters(param);
+        getSpeedLD().setValue(speed + "X");
     }
 }

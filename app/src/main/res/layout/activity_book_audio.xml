@@ -72,6 +72,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <Button
+            android:id="@+id/BT_speed"
+            style="@android:style/TextAppearance.DeviceDefault.Large"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="15dp"
+            android:background="@android:color/transparent"
+            android:onClick="@{() -> audioVM.changeAudioSpeed()}"
+            android:text="@{audioVM.speedLD}"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintBottom_toTopOf="@+id/player_view"
+            app:layout_constraintStart_toStartOf="parent" />
+
     </android.support.constraint.ConstraintLayout>
 
 </layout>

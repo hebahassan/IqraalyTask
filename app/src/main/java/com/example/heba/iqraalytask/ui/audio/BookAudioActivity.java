@@ -37,8 +37,7 @@ public class BookAudioActivity extends AppCompatActivity {
     BookAudioViewModel viewModel;
 
     List<Episode> episodeList = new ArrayList<>();
-
-    ImageButton ibPlay;
+    SimpleExoPlayer exoPlayer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +59,7 @@ public class BookAudioActivity extends AppCompatActivity {
                 binding.playerView.setPlayer(player);
                 setPlayerListener(player);
                 viewModel.getBusy().setValue(8);
+                exoPlayer = player;
             }
         });
     }
