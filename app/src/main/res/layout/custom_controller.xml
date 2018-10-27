@@ -9,9 +9,9 @@
         android:orientation="vertical"
         android:weightSum="100"
         android:layout_gravity="bottom"
-        android:background="#81efe4"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:background="@android:color/transparent"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
 
         <LinearLayout
             android:id="@+id/linearLayout"
