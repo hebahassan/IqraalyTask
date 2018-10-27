@@ -42,7 +42,6 @@ public class BookAudioViewModel extends AndroidViewModel {
 
     public BookAudioViewModel(@NonNull Application application) {
         super(application);
-        getBusy().setValue(0);
         getSpeedLD().setValue(speed + "X");
     }
 
@@ -58,7 +57,7 @@ public class BookAudioViewModel extends AndroidViewModel {
                 defaultBandwidthMeter);
     }
 
-    public LiveData<SimpleExoPlayer> getPlayer(List<Episode> episodeList) {
+    public SimpleExoPlayer returnPlayer(List<Episode> episodeList){
         initPlayer();
 
         if(episodeList != null && !episodeList.isEmpty()){
@@ -76,9 +75,7 @@ public class BookAudioViewModel extends AndroidViewModel {
             player.setPlayWhenReady(true);
         }
 
-        playerLiveData.setValue(player);
-
-        return playerLiveData;
+        return player;
     }
 
     public void releasePlayer(){

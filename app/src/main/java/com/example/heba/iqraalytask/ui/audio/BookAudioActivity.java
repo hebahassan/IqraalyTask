@@ -36,8 +36,8 @@ public class BookAudioActivity extends AppCompatActivity {
     ActivityBookAudioBinding binding;
     BookAudioViewModel viewModel;
 
+    SimpleExoPlayer player;
     List<Episode> episodeList = new ArrayList<>();
-    SimpleExoPlayer exoPlayer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,18 +53,12 @@ public class BookAudioActivity extends AppCompatActivity {
 
         episodeList = book.getEpisodes();
 
-        viewModel.getPlayer(episodeList).observe(this, new Observer<SimpleExoPlayer>() {
-            @Override
-            public void onChanged(@Nullable SimpleExoPlayer player) {
-                binding.playerView.setPlayer(player);
-                setPlayerListener(player);
-                viewModel.getBusy().setValue(8);
-                exoPlayer = player;
-            }
-        });
+        player = viewModel.returnPlayer(episodeList);
+        binding.playerView.setPlayer(player);
+        setPlayerListener();
     }
 
-    private void setPlayerListener(final SimpleExoPlayer player){
+    private void setPlayerListener(){
         player.addListener(new Player.EventListener() {
             @Override
             public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
@@ -84,12 +78,7 @@ public class BookAudioActivity extends AppCompatActivity {
 
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                if (playbackState == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT) {
-                    Toast.makeText(BookAudioActivity.this, "forward", Toast.LENGTH_SHORT).show();
-                }
-                if (playbackState == PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS) {
-                    Toast.makeText(BookAudioActivity.this, "rewind", Toast.LENGTH_SHORT).show();
-                }
+                viewModel.getBusy().setValue(playbackState == Player.STATE_BUFFERING ? 0 : 8);
             }
 
             @Override
