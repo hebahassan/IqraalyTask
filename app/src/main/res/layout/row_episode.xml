@@ -4,6 +4,10 @@
         <variable
             name="episode"
             type="com.example.heba.iqraalytask.network.model.Episode"/>
+
+        <variable
+            name="vm"
+            type="com.example.heba.iqraalytask.ui.audio.BookAudioViewModel"/>
     </data>
 
     <LinearLayout
@@ -40,7 +44,10 @@
             android:layout_height="match_parent"
             android:layout_weight="15"
             android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/download"/>
+            android:src="@drawable/download"
+            android:scaleType="centerCrop"
+            android:padding="10dp"
+            android:onClick="@{() -> vm.onDownloadClick(episode)}"/>
 
         <ImageButton
             android:id="@+id/IB_play"
@@ -48,7 +55,9 @@
             android:layout_height="match_parent"
             android:layout_weight="15"
             android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/play_white"/>
+            android:src="@drawable/play_white"
+            android:scaleType="centerCrop"
+            android:padding="10dp"/>
 
     </LinearLayout>
 

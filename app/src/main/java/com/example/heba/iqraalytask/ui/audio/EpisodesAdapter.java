@@ -1,14 +1,14 @@
 package com.example.heba.iqraalytask.ui.audio;
 
-import android.content.Context;
+import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.heba.iqraalytask.R;
 import com.example.heba.iqraalytask.databinding.RowEpisodeBinding;
@@ -17,12 +17,11 @@ import com.example.heba.iqraalytask.network.model.Episode;
 import java.util.List;
 
 public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.EpisodeItemView> {
-//    private Context context;
     private List<Episode> episodesList;
     ClickListener clickListener;
+    BookAudioViewModel viewModel;
 
     public EpisodesAdapter(List<Episode> episodesList, ClickListener clickListener){
-//        this.context = context;
         this.episodesList = episodesList;
         this.clickListener = clickListener;
     }
@@ -32,6 +31,8 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
     public EpisodeItemView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RowEpisodeBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                 R.layout.row_episode, parent, false);
+
+        viewModel = ViewModelProviders.of((FragmentActivity) parent.getContext()).get(BookAudioViewModel.class);
         return new EpisodeItemView(binding);
     }
 
@@ -39,8 +40,8 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
     public void onBindViewHolder(@NonNull EpisodeItemView holder, int position) {
         Episode episode = episodesList.get(position);
         holder.binding.setEpisode(episode);
+        holder.binding.setVm(viewModel);
         holder.binding.executePendingBindings();
-        Log.d("Episodes", episode.getTitle());
     }
 
     @Override
