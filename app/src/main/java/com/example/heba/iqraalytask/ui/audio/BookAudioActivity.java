@@ -95,6 +95,7 @@ public class BookAudioActivity extends AppCompatActivity {
         EpisodesAdapter adapter = new EpisodesAdapter(episodeList, new EpisodesAdapter.ClickListener() {
             @Override
             public void onClick(View view, int pos) {
+                //Todo: check network connection & add toast for else condition
                 binding.setEpisode(episodeList.get(pos));
                 player.seekTo(pos, 0);
                 player.setPlayWhenReady(true);

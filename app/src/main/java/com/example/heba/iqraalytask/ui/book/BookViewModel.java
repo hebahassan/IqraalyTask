@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.heba.iqraalytask.component.BookDataComponent;
 import com.example.heba.iqraalytask.component.DaggerBookDataComponent;
@@ -23,6 +24,7 @@ import retrofit2.Response;
 public class BookViewModel extends AndroidViewModel {
     private ApiService apiService;
     private MutableLiveData<Integer> busy; //0 -> visible, 8 -> gone
+    private MutableLiveData<Integer> retry;
     private MutableLiveData<Data> bookResLiveData = new MutableLiveData<>();
 
     public BookViewModel(@NonNull Application application) {
@@ -30,12 +32,21 @@ public class BookViewModel extends AndroidViewModel {
 
         BookDataComponent bookDataComponent = DaggerBookDataComponent.create();
         apiService = bookDataComponent.getApiService();
+
+        getRetry().setValue(8);
     }
 
     public MutableLiveData<Integer> getBusy() {
         if(busy == null)
             busy = new MutableLiveData<>();
         return busy;
+    }
+
+    public MutableLiveData<Integer> getRetry() {
+        if(retry == null)
+            retry = new MutableLiveData<>();
+
+        return retry;
     }
 
     public MutableLiveData<Data> getBookData(){
@@ -48,9 +59,11 @@ public class BookViewModel extends AndroidViewModel {
                     if(response.body().getCode().equals(0)){
                         bookResLiveData.setValue(response.body().getData());
                     }
+                    getRetry().setValue(8);
                 }
                 else {
                     bookResLiveData.setValue(null);
+                    getRetry().setValue(0);
                 }
 
                 getBusy().setValue(8);
@@ -60,16 +73,15 @@ public class BookViewModel extends AndroidViewModel {
             public void onFailure(Call<BookResponse> call, Throwable t) {
                 bookResLiveData.setValue(null);
                 getBusy().setValue(8);
+                getRetry().setValue(0);
             }
         });
 
         return bookResLiveData;
     }
 
-    public void onPlayClick(View view, Book book){
-        Context context = view.getContext();
-        Intent intent = new Intent(context, BookAudioActivity.class);
-        intent.putExtra("Book", book);
-        context.startActivity(intent);
+    public void onRetryClick(){
+        getRetry().setValue(8);
+        getBookData();
     }
 }

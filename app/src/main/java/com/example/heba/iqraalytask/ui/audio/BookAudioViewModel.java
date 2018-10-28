@@ -117,24 +117,34 @@ public class BookAudioViewModel extends AndroidViewModel {
     }
 
     public void onDownloadClick(Episode episode){
-        Toast.makeText(getApplication(), "Downloading...", Toast.LENGTH_SHORT).show();
-        String memeType = "audio/*";
-        String url = episode.getFile();
+        if(episode != null){ //Todo: check on network status
+            Toast.makeText(getApplication(), "Downloading...", Toast.LENGTH_SHORT).show();
+            String memeType = "audio/*";
+            String url = episode.getFile();
 
-        DownloadManager downloadManager = (DownloadManager) getApplication().getSystemService(Context.DOWNLOAD_SERVICE);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.setTitle(episode.getTitle());
-        request.setMimeType(memeType);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.allowScanningByMediaScanner();
-        downloadManager.enqueue(request);
+            DownloadManager downloadManager = (DownloadManager) getApplication().getSystemService(Context.DOWNLOAD_SERVICE);
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+            request.setTitle(episode.getTitle());
+            request.setMimeType(memeType);
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            request.allowScanningByMediaScanner();
+            downloadManager.enqueue(request);
+        }else {
+            Toast.makeText(getApplication(), "Please check your internet connection and try again",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onShareClick(Episode episode){
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        share.setType("text/plain");
-        share.putExtra(Intent.EXTRA_TEXT, "Listen to " + episode.getTitle() + " " + episode.getFile());
-        getApplication().startActivity(Intent.createChooser(share, "Share File"));
+        if(episode != null){ //Todo: check on network status
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            share.setType("text/plain");
+            share.putExtra(Intent.EXTRA_TEXT, "Listen to " + episode.getTitle() + " " + episode.getFile());
+            getApplication().startActivity(Intent.createChooser(share, "Share File"));
+        }else {
+            Toast.makeText(getApplication(), "Please check your internet connection and try again",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }

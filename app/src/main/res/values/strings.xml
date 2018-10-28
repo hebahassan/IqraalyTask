@@ -3,4 +3,5 @@
 
     <string name="about_book">About Book</string>
     <string name="runtime_permissions_txt">Please Enable These Permission to start</string>
+    <string name="retry">Retry</string>
 </resources>

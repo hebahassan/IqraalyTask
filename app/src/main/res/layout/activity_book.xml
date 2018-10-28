@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.example.heba.iqraalytask.ui.book.BookActivity"/>
+        <!--<import type="com.example.heba.iqraalytask.ui.book.BookActivity"/>-->
 
         <variable
             name="data"
@@ -34,6 +34,22 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/BT_retry"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="100dp"
+            android:text="@string/retry"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"
+            android:background="@color/dark_bg"
+            android:onClick="@{() -> vm.onRetryClick()}"
+            android:visibility="@{vm.retry}"/>
 
         <ImageView
             android:id="@+id/IV_book_cover"
@@ -72,8 +88,9 @@
             app:layout_constraintBottom_toTopOf="@+id/guideline_h"
             app:layout_constraintEnd_toEndOf="@+id/IV_book_cover"
             app:layout_constraintStart_toStartOf="@+id/IV_book_cover"
-            app:layout_constraintTop_toTopOf="@+id/IV_book_cover"
-            android:onClick="@{(view) -> vm.onPlayClick(view, data.book)}"/>
+            app:layout_constraintTop_toTopOf="@+id/IV_book_cover" />
+
+        <!--android:onClick="@{(view) -> vm.onPlayClick(view, data.book)}"-->
 
         <ImageView
             android:id="@+id/IV_author"
