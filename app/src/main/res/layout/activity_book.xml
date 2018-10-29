@@ -4,8 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <!--<import type="com.example.heba.iqraalytask.ui.book.BookActivity"/>-->
-
         <variable
             name="data"
             type="com.example.heba.iqraalytask.network.model.Data"/>
@@ -63,8 +61,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline_v"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_layout"
-            imageUrl="@{data.book.cover}"
-            android:src="@mipmap/ic_launcher"/>
+            imageUrl="@{data.book.cover}" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline_v"
@@ -90,8 +87,6 @@
             app:layout_constraintEnd_toEndOf="@+id/IV_book_cover"
             app:layout_constraintStart_toStartOf="@+id/IV_book_cover"
             app:layout_constraintTop_toTopOf="@+id/IV_book_cover" />
-
-        <!--android:onClick="@{(view) -> vm.onPlayClick(view, data.book)}"-->
 
         <ImageView
             android:id="@+id/IV_author"

@@ -18,8 +18,8 @@ import java.util.List;
 
 public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.EpisodeItemView> {
     private List<Episode> episodesList;
-    ClickListener clickListener;
-    BookAudioViewModel viewModel;
+    private ClickListener clickListener;
+    private BookAudioViewModel viewModel;
 
     public EpisodesAdapter(List<Episode> episodesList, ClickListener clickListener){
         this.episodesList = episodesList;
@@ -52,7 +52,7 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
     class EpisodeItemView extends RecyclerView.ViewHolder implements View.OnClickListener{
         RowEpisodeBinding binding;
 
-        public EpisodeItemView(RowEpisodeBinding binding) {
+        EpisodeItemView(RowEpisodeBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             binding.IBPlay.setOnClickListener(this);
