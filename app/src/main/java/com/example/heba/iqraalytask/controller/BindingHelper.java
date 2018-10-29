@@ -4,7 +4,7 @@ import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.widget.ImageView;
 
-public class GlideHelper {
+public class BindingHelper {
     @BindingAdapter("imageUrl")
     public static void setImage(ImageView imageView, String url){
         Context context = imageView.getContext();
