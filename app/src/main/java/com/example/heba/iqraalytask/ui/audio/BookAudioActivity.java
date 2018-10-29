@@ -1,6 +1,7 @@
 package com.example.heba.iqraalytask.ui.audio;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.heba.iqraalytask.R;
 import com.example.heba.iqraalytask.databinding.ActivityBookAudioBinding;
@@ -55,6 +57,12 @@ public class BookAudioActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 openEpisodesSheet();
+            }
+        });
+        binding.IBShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onShare();
             }
         });
     }
@@ -108,10 +116,21 @@ public class BookAudioActivity extends AppCompatActivity {
         bottomSheetDialog.show();
     }
 
+    private void onShare(){
+        //Todo: check on network status
+        if(binding.getEpisode() != null){
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            share.setType("text/plain");
+            share.putExtra(Intent.EXTRA_TEXT, "Listen to " + binding.getEpisode().getTitle() + " "
+                    + binding.getEpisode().getFile());
+            startActivity(Intent.createChooser(share, "Share File"));
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        releasePlayer();
         viewModel.releasePlayer();
     }
 }

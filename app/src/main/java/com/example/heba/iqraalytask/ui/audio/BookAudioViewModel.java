@@ -134,17 +134,4 @@ public class BookAudioViewModel extends AndroidViewModel {
                     Toast.LENGTH_SHORT).show();
         }
     }
-
-    public void onShareClick(Episode episode){
-        if(episode != null){ //Todo: check on network status
-            Intent share = new Intent(Intent.ACTION_SEND);
-            share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            share.setType("text/plain");
-            share.putExtra(Intent.EXTRA_TEXT, "Listen to " + episode.getTitle() + " " + episode.getFile());
-            getApplication().startActivity(Intent.createChooser(share, "Share File"));
-        }else {
-            Toast.makeText(getApplication(), "Please check your internet connection and try again",
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
 }
