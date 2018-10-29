@@ -2,24 +2,30 @@ package com.example.heba.iqraalytask.ui.audio;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.example.heba.iqraalytask.R;
+import com.example.heba.iqraalytask.controller.ConnectivityChangeReceiver;
+import com.example.heba.iqraalytask.controller.ConnectivityHelper;
 import com.example.heba.iqraalytask.databinding.ActivityBookAudioBinding;
 import com.example.heba.iqraalytask.databinding.BottomSheetEpisodesBinding;
+import com.example.heba.iqraalytask.interfaces.ConnectivityInterface;
 import com.example.heba.iqraalytask.network.model.Book;
 import com.example.heba.iqraalytask.network.model.Episode;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.TrackGroupArray;
@@ -28,29 +34,36 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookAudioActivity extends AppCompatActivity {
+public class BookAudioActivity extends AppCompatActivity implements ConnectivityInterface {
     ActivityBookAudioBinding binding;
     BookAudioViewModel viewModel;
 
     SimpleExoPlayer player;
     List<Episode> episodeList = new ArrayList<>();
+    Episode selectedEpisode;
+
+    int selectedPos = 0;
+    long posMs = 0;
+    boolean isError = false;
+
+    ConnectivityChangeReceiver connectivityChangeReceiver;
+    ConnectivityInterface connectivityInterface;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Book book = (Book) getIntent().getSerializableExtra("Book");
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_book_audio);
         viewModel = ViewModelProviders.of(this).get(BookAudioViewModel.class);
         binding.setAudioVM(viewModel);
         binding.setLifecycleOwner(this);
         binding.executePendingBindings();
 
+        Book book = (Book) getIntent().getSerializableExtra("Book");
         episodeList = book.getEpisodes();
+        selectedEpisode = episodeList.get(0);
 
-        player = viewModel.returnPlayer(episodeList);
-        binding.playerView.setPlayer(player);
+        setReceiver();
+        onStartActivity();
         setPlayerListener();
 
         binding.IBOpenSheet.setOnClickListener(new View.OnClickListener() {
@@ -67,19 +80,39 @@ public class BookAudioActivity extends AppCompatActivity {
         });
     }
 
+    private void onStartActivity(){
+        player = viewModel.returnPlayer(episodeList);
+        binding.playerView.setPlayer(player);
+        binding.setEpisode(selectedEpisode);
+    }
+
+    private void setReceiver(){
+        connectivityChangeReceiver = new ConnectivityChangeReceiver();
+        connectivityInterface = this;
+        connectivityChangeReceiver.setNetworkListener(connectivityInterface);
+        registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
     private void setPlayerListener(){
         player.addListener(new Player.DefaultEventListener() {
             @Override
             public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                 super.onTracksChanged(trackGroups, trackSelections);
-                int pos = player.getCurrentWindowIndex();
-                binding.setEpisode(episodeList.get(pos));
+                selectedPos = player.getCurrentWindowIndex();
+                selectedEpisode = episodeList.get(selectedPos);
+                binding.setEpisode(selectedEpisode);
             }
 
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 super.onPlayerStateChanged(playWhenReady, playbackState);
                 viewModel.getBusy().setValue(playbackState == Player.STATE_BUFFERING ? 0 : 8);
+            }
+
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+                super.onPlayerError(error);
+                isError = true;
             }
         });
     }
@@ -103,7 +136,6 @@ public class BookAudioActivity extends AppCompatActivity {
         EpisodesAdapter adapter = new EpisodesAdapter(episodeList, new EpisodesAdapter.ClickListener() {
             @Override
             public void onClick(View view, int pos) {
-                //Todo: check network connection & add toast for else condition
                 binding.setEpisode(episodeList.get(pos));
                 player.seekTo(pos, 0);
                 player.setPlayWhenReady(true);
@@ -117,14 +149,19 @@ public class BookAudioActivity extends AppCompatActivity {
     }
 
     private void onShare(){
-        //Todo: check on network status
-        if(binding.getEpisode() != null){
-            Intent share = new Intent(Intent.ACTION_SEND);
-            share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            share.setType("text/plain");
-            share.putExtra(Intent.EXTRA_TEXT, "Listen to " + binding.getEpisode().getTitle() + " "
-                    + binding.getEpisode().getFile());
-            startActivity(Intent.createChooser(share, "Share File"));
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        share.setType("text/plain");
+        share.putExtra(Intent.EXTRA_TEXT, "Listen to " + binding.getEpisode().getTitle() + " "
+                + binding.getEpisode().getFile());
+        startActivity(Intent.createChooser(share, "Share File"));
+    }
+
+    protected void unregisterNetworkChanges() {
+        try {
+            unregisterReceiver(connectivityChangeReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
         }
     }
 
@@ -132,5 +169,19 @@ public class BookAudioActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         viewModel.releasePlayer();
+        unregisterNetworkChanges();
+    }
+
+    @Override
+    public void onNetworkConnection() {
+        if(isError){
+            posMs = player.getContentPosition();
+            selectedPos = player.getCurrentWindowIndex();
+            selectedEpisode = episodeList.get(selectedPos);
+
+            viewModel.releasePlayer();
+            onStartActivity();
+            player.seekTo(selectedPos, posMs);
+        }
     }
 }

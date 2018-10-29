@@ -59,11 +59,9 @@ public class BookViewModel extends AndroidViewModel {
                     if(response.body().getCode().equals(0)){
                         bookResLiveData.setValue(response.body().getData());
                     }
-                    getRetry().setValue(8);
                 }
                 else {
                     bookResLiveData.setValue(null);
-                    getRetry().setValue(0);
                 }
 
                 getBusy().setValue(8);
@@ -73,7 +71,6 @@ public class BookViewModel extends AndroidViewModel {
             public void onFailure(Call<BookResponse> call, Throwable t) {
                 bookResLiveData.setValue(null);
                 getBusy().setValue(8);
-                getRetry().setValue(0);
             }
         });
 

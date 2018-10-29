@@ -1,4 +1,5 @@
 <resources>
     <string name="about_book">عن الكتاب</string>
     <string name="retry">إعادة المحاولة</string>
+    <string name="check_connection">خطأ أثناء الاتصال بالانترنت</string>
 </resources>

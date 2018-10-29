@@ -5,11 +5,12 @@ import android.app.DownloadManager;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import com.example.heba.iqraalytask.R;
+import com.example.heba.iqraalytask.controller.ConnectivityHelper;
 import com.example.heba.iqraalytask.network.model.Episode;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -117,7 +118,7 @@ public class BookAudioViewModel extends AndroidViewModel {
     }
 
     public void onDownloadClick(Episode episode){
-        if(episode != null){ //Todo: check on network status
+        if(ConnectivityHelper.isConnectedToNetwork(getApplication())){
             Toast.makeText(getApplication(), "Downloading...", Toast.LENGTH_SHORT).show();
             String memeType = "audio/*";
             String url = episode.getFile();
@@ -130,8 +131,7 @@ public class BookAudioViewModel extends AndroidViewModel {
             request.allowScanningByMediaScanner();
             downloadManager.enqueue(request);
         }else {
-            Toast.makeText(getApplication(), "Please check your internet connection and try again",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplication(), getApplication().getString(R.string.check_connection), Toast.LENGTH_SHORT).show();
         }
     }
 }
