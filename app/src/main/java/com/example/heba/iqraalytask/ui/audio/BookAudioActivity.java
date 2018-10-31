@@ -140,17 +140,21 @@ public class BookAudioActivity extends AppCompatActivity implements Connectivity
         EpisodesAdapter adapter = new EpisodesAdapter(episodeList, new EpisodesAdapter.ClickListener() {
             @Override
             public void onClick(View view, int pos) {
-                if(!episodeList.get(pos).getPlaying()){
+                if(binding.getEpisode().getId().equals(episodeList.get(pos).getId())){
+                    if(!player.getPlayWhenReady()){
+                        player.setPlayWhenReady(true);
+                        episodeList.get(pos).setPlaying(true);
+                    }else {
+                        player.setPlayWhenReady(false);
+                        episodeList.get(pos).setPlaying(false);
+                    }
+                }
+                else {
                     selectedEpisode.setPlaying(false);
-
                     binding.setEpisode(episodeList.get(pos));
                     player.seekTo(pos, 0);
                     player.setPlayWhenReady(true);
                     episodeList.get(pos).setPlaying(true);
-                }
-                else {
-                    episodeList.get(pos).setPlaying(false);
-                    player.setPlayWhenReady(false);
                 }
 
                 bottomSheetDialog.dismiss();
