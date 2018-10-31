@@ -28,6 +28,8 @@ public class Episode implements Serializable {
     @Expose
     private String isPaid;
 
+    private Boolean isPlaying = false;
+
     public String getId() {
         return id;
     }
@@ -82,5 +84,13 @@ public class Episode implements Serializable {
 
     public void setIsPaid(String isPaid) {
         this.isPaid = isPaid;
+    }
+
+    public Boolean getPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(Boolean playing) {
+        isPlaying = playing;
     }
 }

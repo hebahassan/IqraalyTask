@@ -82,6 +82,7 @@ public class BookAudioActivity extends AppCompatActivity implements Connectivity
         player = viewModel.returnPlayer(episodeList);
         binding.playerView.setPlayer(player);
         binding.setEpisode(selectedEpisode);
+        selectedEpisode.setPlaying(true);
     }
 
     private void setReceiver(){
@@ -96,8 +97,10 @@ public class BookAudioActivity extends AppCompatActivity implements Connectivity
             @Override
             public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                 super.onTracksChanged(trackGroups, trackSelections);
+                selectedEpisode.setPlaying(false);
                 selectedPos = player.getCurrentWindowIndex();
                 selectedEpisode = episodeList.get(selectedPos);
+                selectedEpisode.setPlaying(true);
                 binding.setEpisode(selectedEpisode);
             }
 
@@ -105,12 +108,15 @@ public class BookAudioActivity extends AppCompatActivity implements Connectivity
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 super.onPlayerStateChanged(playWhenReady, playbackState);
                 viewModel.getBusy().setValue(playbackState == Player.STATE_BUFFERING ? 0 : 8);
+
+                selectedEpisode.setPlaying(playWhenReady);
             }
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
                 super.onPlayerError(error);
                 isError = true;
+                player.setPlayWhenReady(false);
             }
         });
     }
@@ -134,9 +140,19 @@ public class BookAudioActivity extends AppCompatActivity implements Connectivity
         EpisodesAdapter adapter = new EpisodesAdapter(episodeList, new EpisodesAdapter.ClickListener() {
             @Override
             public void onClick(View view, int pos) {
-                binding.setEpisode(episodeList.get(pos));
-                player.seekTo(pos, 0);
-                player.setPlayWhenReady(true);
+                if(!episodeList.get(pos).getPlaying()){
+                    selectedEpisode.setPlaying(false);
+
+                    binding.setEpisode(episodeList.get(pos));
+                    player.seekTo(pos, 0);
+                    player.setPlayWhenReady(true);
+                    episodeList.get(pos).setPlaying(true);
+                }
+                else {
+                    episodeList.get(pos).setPlaying(false);
+                    player.setPlayWhenReady(false);
+                }
+
                 bottomSheetDialog.dismiss();
             }
         });

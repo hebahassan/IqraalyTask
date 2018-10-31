@@ -55,9 +55,9 @@
             android:layout_height="match_parent"
             android:layout_weight="15"
             android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/play_white"
+            android:src="@{!episode.playing ? @drawable/play_white : @drawable/pause_white}"
             android:scaleType="centerCrop"
-            android:padding="10dp"/>
+            android:padding="12dp"/>
 
     </LinearLayout>
 
